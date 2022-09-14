@@ -1,0 +1,58 @@
+{% extends "layout/base.njk" %}
+
+{% block title %}
+    {{translate('title_entry')}}
+{% endblock %}
+
+{% block content %}
+    <div class="image-container">
+        <img src="/assets/images/indie_logo.png" class="img-fluid" alt="INDIe Project"/>
+        <div class="progress " style="height: 20px;">
+            <div id="progress" class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: 25%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
+                <strong>
+                    {{translate('starting')}}
+                    ...
+                </strong>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    <script type="text/javascript">
+        var token = {{token | dump | safe}};
+
+        $(document).ready(function () {
+            setProgress(60);
+            setProgressTitle(translate('load.messages.loading_data') + "...");
+
+            var jqxhr = $
+                .getJSON("load/" + token, function (data) {
+                    setProgress(100);
+                    setProgressTitle(translate('load.messages.data_loaded') + "...");
+
+                    setTimeout(function () {
+                        var urlRedirect = data.editor;
+                        window
+                            .location
+                            .replace(urlRedirect);
+                    }, 500);
+                })
+                .fail(function (jqxhr, textStatus, error) {
+                    setProgress(100);
+                    setProgressTitle(translate('load.messages.loading_error') + "...");
+                    $("#progress").addClass("bg-danger");
+                    notifyError(translate('common.error'), translate('load.messages.loading_error'));
+                });
+        });
+
+        function setProgress(percentage) {
+            $("#progress").attr("style", "width: " + percentage + "%");
+            $("#progress").attr("aria-valuenow", percentage);
+        }
+
+        function setProgressTitle(title) {
+            $("#progress").html(title);
+        }
+    </script>
+{% endblock %}

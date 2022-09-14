@@ -1,0 +1,204 @@
+{% extends "layout/base.njk" %}
+
+{% block title %}
+    {{translate('title_editing')}}
+    {{name}}
+{% endblock %}
+
+{% block styles %}
+    <link rel="stylesheet" type="text/css" href="{{resource('/vendor/select2/select2.min.css')}}">
+    <link rel="stylesheet" type="text/css" href="{{resource('/vendor/select2/select2-bootstrap4.min.css')}}">
+{% endblock %}
+
+{% block nav %}
+    {% include "layout/nav.njk" %}
+{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-12 px-4">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">
+                    {{translate('now_editing')}}:
+                    <span>{{name}}</span>
+                </li>
+            </ol>
+            <div class="row">
+                <div class="col-xl-3 col-md-4">
+                    <div class="card cardIndie">
+                        <div class="card-header">{{translate('question_bank')}}</div>
+                        <div class="card-body">
+                            <p>{{translate('question_bank_help_1')}}</p>
+                            <button onclick="addQuestion('SingleAnswer')" class="btn btn-sm btn-indie btn-block my-2">{{translate('append_single')}}</button>
+                            <button onclick="addQuestion('MultipleAnswer')" class="btn btn-sm btn-indie btn-block my-2">{{translate('append_multiple')}}</button>
+                            <button onclick="addQuestion('TrueFalse')" class="btn btn-sm btn-indie btn-block my-2">{{translate('append_trueFalse')}}</button>
+                            <p>{{translate('question_bank_help_2')}}</p>
+                            <button onclick="generateRandomUnit()" class="btn btn-sm btn-indie btn-block my-2">{{translate('generate_random')}}</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-9 col-md-8">
+                    <div class="card cardIndie">
+                        <div class="card-header">
+                            <div class="row">
+                                <div class="col-3">
+                                    <span class="title-unit">{{translate('evaluation_unit')}}</span>
+                                </div>
+                                <div class="col-9 right">
+                                    <button class="btn btn-sm btn-success" onclick="saveUnit()">
+                                        <i class="fa fa-save"></i>
+                                        {{translate('save_unit')}}
+                                    </button>
+                                    <button class="btn btn-sm btn-info" onclick="preview()">
+                                        <i class="fa fa-eye"></i>
+                                        {{translate('preview')}}
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body questions-container" id="questions-container"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="modal-add-question" class="modal fade" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-xl" role="document">
+            <div class="modal-content border-indie">
+                <div class="modal-header modal-indie">
+                    <h6 id="modal-settings-tittle" class="modal-title">{{translate('add_question')}}</h6>
+                </div>
+                <div id="modal-add-question-body" class="modal-body">
+                    <div class="form">
+                        <div class="form-group">
+                            <div class="card">
+                                <div class="card-header">{{translate('selected_questions')}}</div>
+                                <div class="card-body no-padding">
+                                    <div class="list-group question-list selected-questions"></div>
+                                </div>
+                                <div class="card-footer right">
+                                    <button class="btn btn-sm btn-info" onclick="unselectAll('selected')">{{translate('unselect_all')}}</button>
+                                    <button class="btn btn-sm btn-info" onclick="selectAll('selected')">{{translate('select_all')}}</button>
+                                    <button class="btn btn-sm btn-danger" onclick="removeQuestion()">{{translate('delete_question')}}</button>
+                                </div>
+                            </div>
+                            <small class="form-text text-muted">{{translate('selcted_questions_help')}}</small>
+                        </div>
+                        <div class="form-group">
+                            <label>{{translate('tags')}}</label>
+                            <br/>
+                            <div id="tags-container"></div>
+                            <br/>
+                            <label>{{translate('groups')}}</label>
+                            <br/>
+                            <div id="groups-container"></div>
+                        </div>
+                        <div class="form-group">
+                            <div class="card">
+                                <div class="card-header">{{translate('question_search')}}</div>
+                                <div class="card-body no-padding">
+                                    <div class="list-group question-list search-questions"></div>
+                                </div>
+                                <div class="card-footer right">
+                                    <button class="btn btn-sm btn-info" onclick="unselectAll('search')">{{translate('unselect_all')}}</button>
+                                    <button class="btn btn-sm btn-info" onclick="selectAll('search')">{{translate('select_all')}}</button>
+                                    <button class="btn btn-sm btn-success" onclick="addSearchedQuestion()">{{translate('add_question')}}</button>
+                                </div>
+                            </div>
+                            <small class="form-text text-muted">{{translate('question_search_help')}}.</small>
+                        </div>
+                        <div class="form-group"></div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">{{translate('cancel')}}</button>
+                        <button type="button" class="btn btn-indie" onclick="addSelectedQuestions()">{{translate('add_selected_questions')}}</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="modal-random" class="modal fade" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content border-indie">
+                <div class="modal-header modal-indie">
+                    <h6>{{translate('generate_random')}}</h6>
+                </div>
+                <div id="modal-random-body" class="modal-body">
+                    <form id="randomForm" class="hide">
+                        <div class="form-group">
+                            <label for="tags">{{translate('question_tags')}}</label>
+                            <select id="random-select-tags" class="form-control" name="tags" multiple="multiple" data-allow-clear="1"></select>
+                            <small class="form-text text-muted">{{translate('question_tags_help')}}</small>
+                        </div>
+                        <div class="form-group">
+                            <label for="tags">{{translate('question_groups')}}</label>
+                            <select id="random-select-groups" class="form-control" multiple="multiple" data-allow-clear="1"></select>
+                            <small class="form-text text-muted">{{translate('question_groups_help')}}</small>
+                        </div>
+                        <div id="random-type-checkboxes-wrapper" class="form-group">
+                            <label>{{translate('question_type')}}</label>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="SingleAnswer" name="ch-single" id="ch-single">
+                                <label class="form-check-label" for="ch-single">
+                                    {{translate('single_answer_questions')}}
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="MultipleAnswer" name="ch-multiple" id="ch-multiple">
+                                <label class="form-check-label" for="ch-multiple">
+                                    {{translate('multiple_answer_questions')}}
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="TrueFalse" name="ch-true" id="ch-true">
+                                <label class="form-check-label" for="ch-true">
+                                    {{translate('trueFalse_answer_questions')}}
+                                </label>
+                            </div>
+                            <small class="form-text text-muted">{{translate('question_type_help')}}</small>
+                        </div>
+                    </form>
+                    <div class="form-group">
+                        {{translate('select')}}
+                        <input id="random-questions-number" value="0" type="number" style="width:60px" min="0" max="0"/>
+                        {{translate('of')}}
+                        <strong id="available-question-label">0</strong>
+                        {{translate('avaialble_questions')}}
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                        {{translate('cancel')}}</button>
+                    <button type="button" class="btn btn-indie" onclick="submitRandomForm()">
+                        {{translate('generate_unit')}}</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% include "partials/modals/saving-content.njk" %}
+    {% include "partials/modals/preview-generated.njk" %}
+    {% include "partials/modals/generating-preview.njk" %}
+    {% include "partials/modals/loading-content.njk" %}
+
+{% endblock %}
+
+{% block scripts %}
+    <script type="text/javascript" src="{{resource('/vendor/dragula/dragula.min.js')}}"></script>
+    <script type="text/javascript" src="{{resource('/vendor/select2/select2.min.js')}}"></script>
+    <script type="text/javascript" src="/vendor/select2/{{getLocale()}}.js{{version()}}"></script>
+    <script type="text/javascript" src="{{resource('/assets/js/evaluation-editor.min.js')}}"></script>
+
+    <script type="text/javascript">
+        var model = {{model | dump | safe}};
+
+        // Search question url
+        var getQuestionUrl = '/editor/evaluation/{{token}}/questions'
+        var saveUnitUrl = '/editor/evaluation/{{token}}/save';
+        var previewUnitUrl = '/editor/evaluation/{{token}}/preview';
+    </script>
+
+    <script type="text/javascript" src="{{resource('/assets/js/evaluation-view.min.js')}}"></script>
+{% endblock %}

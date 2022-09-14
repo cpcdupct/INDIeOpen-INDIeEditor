@@ -1,0 +1,39 @@
+@import 'variables';
+
+/** UTILS */
+.elipsis-text {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.feather {
+    width: 16px;
+    height: 16px;
+    vertical-align: text-bottom;
+}
+
+.right {
+    text-align: right;
+}
+
+.hide {
+    display: none !important;
+}
+
+.no-padding {
+    padding: 0;
+}
+
+.bg-indie {
+    background-color: $indieblue;
+}
+
+.table td,
+.table th {
+    padding: 0.5rem !important;
+}
+
+.border-indie {
+    border-color: $indieblue;
+}

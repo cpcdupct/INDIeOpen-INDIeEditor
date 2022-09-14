@@ -1,0 +1,12 @@
+@import '../variables';
+
+.btn-indie {
+    background-color: $indieblue;
+    color: white;
+    border-color: $indieblue;
+}
+
+.btn-indie:hover {
+    background-color: $indieblue;
+    color: white;
+}

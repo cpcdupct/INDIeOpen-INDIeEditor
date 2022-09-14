@@ -1,0 +1,145 @@
+{% extends "layout/base.njk" %}
+
+{% block title %}
+    {{translate('title_editing')}}
+    {{name}}
+{% endblock %}
+
+{% block styles %}
+    <!--<link rel="stylesheet" type="text/css" href="/vendor/drawflow/drawflow.min.css">-->
+{% endblock %}
+
+{% block nav %}
+    {% include "layout/nav.njk" %}
+{% endblock %}
+
+{% block content %}
+    <div class="wrapper">
+        <div class="units-col">
+            {% for unit in units %}
+                <div class="drag-drawflow drag-unit {{'unit-content' if unit.type === 'CONTENT' else 'unit-evaluation'}}" draggable="true" ondragstart="editor.drag(event)" data-node="{{unit.id}}">
+                    <span class="drag-unit-title">
+                        {{unit.name}}</span>
+                    <br/>
+                    <span class="drag-unit-description">{{unit.description}}</span>
+                    <span class="badge {{'badge-content' if unit.type === 'CONTENT' else 'badge-evaluation'}}">
+                        {% if unit.type === 'CONTENT' %}
+                            {{translate('content')}}
+                        {% else %}
+                            {{translate('evaluation')}}
+                        {% endif %}
+                    </span>
+                </div>
+            {% endfor %}
+        </div>
+        <div class="editor-col">
+            <div id="drawflow" ondrop="editor.drop(event)" ondragover="editor.allowDrop(event)">
+                <button class="btn-clear btn btn-primary" onclick="save()" style='right: 12rem;'>
+                    {{translate('course_save')}}
+                </button>
+                <div class="btn-clear btn btn-danger" onclick="clear()">
+                    {{translate('course_clear')}}</div>
+                <div class="btn-lock">
+                    <i id="lock" class="fas fa-lock" onclick="editor.lock();" style="display:none;"></i>
+                    <i id="unlock" class="fas fa-lock-open" onclick="editor.unlock();" style="display:none;"></i>
+                </div>
+                <div class="bar-zoom">
+                    <i class="fas fa-search-minus" onclick="editor.zoom_out()"></i>
+                    <i class="fas fa-search" onclick="editor.zoom_reset()"></i>
+                    <i class="fas fa-search-plus" onclick="editor.zoom_in()"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {# Modals #}
+    {% include "partials/modals/saving-content.njk" %}
+
+    {# MODAL CREATING RULE  #}
+    <div id="modal-rule" class="modal fade" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content ">
+                <div class="modal-header modal-indie">
+                    <h5 class="modal-title">
+                        {{translate('course_create_rule')}}</h5>
+                </div>
+                <form id="rule-form">
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col">
+                                <div class="form-group">
+                                    <label for="operator">{{translate('course_operator')}}</label>
+                                    <select class="custom-select" id="operator" name="operator" required="true">
+                                        <option selected="true" value="gt">&gt;</option>
+                                        <option selected="true" value="lt">&lt;</option>
+                                        <option selected="true" value="le">&le;</option>
+                                        <option selected="true" value="ge">&ge;</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="form-group">
+                                    <label for="grade">{{translate('course_grade')}}</label>
+                                    <input type="number" min="1" max="10" value="1" class="form-control mb-2 mr-sm-2" id="grade" name="grade" required="true"/>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-info" data-action="dismiss">{{translate('cancel')}}</button>
+                        <button type="submit" form="rule-form" class="btn btn-indie" value="Submit">{{translate('save')}}</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block scripts %}
+    <script type="text/javascript" src="/vendor/drawflow/drawflow.min.js"></script>
+    <script type="text/javascript" src="{{resource('/assets/js/course-editor.min.js')}}"></script>
+
+    <script type="text/javascript">
+        const model = {{model | dump | safe}};
+        const availableUnits = {{units | dump | safe}};
+        const saveModelUrl = '/editor/course/{{token}}/save';
+        const testUrl = '/editor/course/{{token}}/url';
+
+        const editor = courseEditor('drawflow', {units: availableUnits});
+
+        if (model.instance.drawflow) 
+            editor.importEditorData(model.instance, false);
+        
+        function save() {
+            $("#modal-saving-content").modal(modalOptionsShow);
+            $("#modal-saving-content").on("shown.bs.modal", function (e) {
+
+                const data = editor.exportData();
+                model.instance = data;
+
+                $.ajax({
+                    url: saveModelUrl,
+                    type: "POST",
+                    contentType: "application/json",
+                    data: JSON.stringify(model),
+                    success: function (data) {
+                        notifySuccess(translate('common.ok'), translate('course.messages.course_saved'));
+                    },
+                    error: function (err) {
+                        notifyError(translate('common.ooops'), translate('common.internal_error'));
+                        $("#modal-saving-content").modal('hide');
+                    },
+                    complete: function () {
+                        $("#modal-saving-content").modal('hide');
+                    }
+                });
+            });
+        }
+
+        function clear() {
+            editor.clearModuleSelected();
+        }
+    </script>
+{% endblock %}

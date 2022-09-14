@@ -1,0 +1,289 @@
+{% extends "layout/base.njk" %}
+
+{% block title %}
+    {{translate('title_entry')}}
+    {{name}}
+{% endblock %}
+
+{% block styles %}
+    <link rel="stylesheet" type="text/css" href="{{resource('/vendor/jstree/themes/default/style.min.css')}}">
+    <link rel="stylesheet" type="text/css" href="{{resource('/vendor/indievideo/indievideo-styles.min.css')}}">
+    <link rel="stylesheet" type="text/css" href="{{resource('/vendor/iavideo/iaVideo.min.css')}}">
+    <link href="my_azure_mediaplayer_lib.min.css" rel="stylesheet">
+{% endblock %}
+
+{% block nav %}
+    {% include "layout/nav.njk" %}
+{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-12 col-md-3 col-lg-2 bd-sidebar">
+            <nav class="palette-nav">
+                <div id="palette">
+                    <div class="palette-header">
+                        <span>{{translate('schema')}}</span>
+                    </div>
+                </div>
+            </nav>
+        </div>
+        <div class="col-12 col-md-9 col-lg-10 offset-md-3 offset-lg-2  bd-content no-padding">
+            <div class="editor-container">
+                <div class="row tool-container">
+                    <div class="col right">
+                        <!-- Left buttons in header -->
+                        <button onclick="saveVideo()" class="btn btn-sm btn-header btn-info" data-toggle="tooltip" data-title="{{translate('save_video_help')}}">
+                            {{translate('save_video')}}
+                            <i class="fa fa-save"></i>
+                        </button>
+                        <button onclick="previewVideo()" class="btn btn-sm btn-header btn-info" data-toggle="tooltip" data-title=" {{translate('preview_video_help')}}">
+                            {{translate('preview')}}
+                            <i class="fa fa-eye"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-7">
+                        <div class="card video-card">
+                            <div id="video-wrapper" class="card-body video-wrapper">
+                                <div class="video-player">
+                                    <div class="iavideo-container"></div>
+                                </div>
+                                <div class="video-control">
+                                    <div class="video-control-wrapper">
+                                        <div class="btn-group" role="group">
+                                            <button type="button" data-control="playpause" class="btn btn-indie">
+                                                <i class="fa fa-play"></i>
+                                                <i class="fa fa-pause"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="video-progress-wrapper">
+                                        <div class="current-time-wrapper">
+                                            <span data-control="currentTime">0:00:000</span>
+                                        </div>
+                                        <div data-control="progress-bar" class="progress-wrapper">
+                                            <input type="range" class="progress-range" value="0" min="0" max="100">
+                                        </div>
+                                        <div class="final-time-wrapper">
+                                            <span data-control="finalTime">0:00:000</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-5">
+                        <div id="indie-actions" class="card actions-card">
+                            <div class="card-header">
+                                <ul class="nav nav-tabs card-header-tabs" id="tab-list" role="tablist">
+                                    <li class="nav-item">
+                                        <a class="nav-link active show" id="one-tab" data-toggle="tab" href="#timemarks" role="tab" aria-controls="TimeMarks" aria-selected="true">
+                                            <i class="fa fa-clock"></i>
+                                            {{translate('time_marks')}}</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" id="two-tab" data-toggle="tab" href="#interactiveAreas" role="tab" aria-controls="InteractiveAreas" aria-selected="false">
+                                            <i class="fa fa-vector-square"></i>
+                                            {{translate('interactive_areas')}}</a>
+                                    </li>
+                                </ul>
+                            </div>
+
+                            <div class="tab-content no-padding">
+                                <div class="tab-pane fade show active" id="timemarks" role="tabpanel">
+                                    <div class="form-group row">
+                                        <label for="start" class="col-3 col-form-label">{{translate('start_time')}}</label>
+                                        <input type="text" name="start" data-input="start" class="col-4 form-control" placeholder="m:ss:ddd"/>
+                                        <button class="btn btn-success btn-sm col-3 offset-md-1" onclick="indievideo.api.takeTime(0)">
+                                            <i class="fa fa-clock"></i>{{translate('take_time')}}
+                                        </button>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label for="end" class="col-3 col-form-label">{{translate('end_time')}}</label>
+                                        <input type="text" name="end" data-input="end" class="col-4 form-control" placeholder="m:ss:ddd"/>
+                                        <button class="btn btn-success btn-sm col-3 offset-md-1" onclick="indievideo.api.takeTime(1)">
+                                            <i class="fa fa-clock"></i>{{translate('take_time')}}
+                                        </button>
+                                    </div>
+                                    <div class="card-footer">
+                                        <button class="btn btn-sm btn-success" id="saveTime" onclick="indievideo.api.save()">
+                                            <i class="fa fa-save"></i>
+                                            {{translate('save')}}
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="tab-pane fade" id="interactiveAreas" role="tabpanel">
+                                    <table class="table table-sm table-interactive">
+                                        <thead>
+                                            <tr>
+                                                <th>{{translate('interactive_area')}}</th>
+                                                <th>{{translate('text')}}</th>
+                                                <th>{{translate('clickable_area')}}</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody data-input="interactiveAreas"></tbody>
+                                    </table>
+                                    <div class="card-footer" style="text-align: center;">
+                                        <button class="btn btn-sm btn-info" id="viewCanvas" onclick="indievideo.video.viewCanvas()">
+                                            <i id="iconCanvas" class="fa fa-eye"></i>
+                                            {{translate('show_areas')}}
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="modal-preview" class="modal fade" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content border-indie">
+                <div class="modal-header modal-indie">
+                    <h5 id="modal-preview-tittle" class="modal-title">{{translate('preview')}}</h5>
+                </div>
+                <div id="modal-preview-body" class="modal-body" style="max-height: 400"></div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">{{translate('ok')}}</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% include "partials/modals/loading-content.njk" %}
+    {% include "partials/modals/saving-content.njk" %}
+    {% include "partials/modals/generating-preview.njk" %}
+
+{% endblock %}
+
+{% block scripts %}
+    {# VIDEO DEPENDENCIES #}
+    <script src="{{resource('/vendor/jstree/jstree.min.js')}}"></script>
+    <script src="{{resource('/vendor/jsonpath/jsonpath.min.js')}}"></script>
+    <script src="my_azure_mediaplayer_lib.min.js"></script>
+    <script src="{{resource('/vendor/iavideo/iaVideo.min.js')}}"></script>
+
+    {# INDIE VIDEO #}
+    <script src="{{resource('/vendor/indievideo/indievideo.min.js')}}"></script>
+    <script src="/vendor/indievideo/lang/{{getLocale()}}.js"></script>
+
+    {# FUNCTIONS #}
+    <script type="text/javascript">
+        var model = {{model | dump | safe}};
+
+        var saveVideoUrl = '/editor/video/{{token}}/save';
+        var previewUrl = '/editor/video/{{token}}/preview';
+
+        (function () {
+            var palette = document.getElementById('palette');
+            var videoWrapper = document.getElementById('video-wrapper');
+            var actions = document.getElementById('indie-actions');
+
+            var indieContainers = {
+                tree: palette,
+                video: videoWrapper,
+                actions: actions
+            };
+
+            var video = {
+                videosource: model.instance.videosource,
+                data: model.instance.editorData
+            };
+
+            indievideo.init(video, indieContainers);
+        })();
+
+        function saveVideo() {
+            $("#modal-saving-content").modal(modalOptionsShow);
+            $("#modal-saving-content").on("shown.bs.modal", function (e) {
+                indievideo
+                    .api
+                    .getData(function (videoData) {
+                        model.instance.editorData = videoData;
+
+                        $.ajax({
+                            url: saveVideoUrl,
+                            type: "POST",
+                            contentType: "application/json",
+                            data: JSON.stringify(model),
+                            success: function (data) {
+                                notifySuccess(translate('common.ok'), translate('video.messages.video_saved'));
+                            },
+                            error: function (err) {
+                                notifyError(translate('common.ooops'), translate('common.internal_error'));
+                                $("#modal-saving-content").modal('hide');
+                            },
+                            complete: function () {
+                                $("#modal-saving-content").modal('hide');
+                            }
+                        });
+                    }, function () {
+                        notifyError(translate('common.attention'), translate('video.messages.not_valid_data'));
+                    });
+            });
+
+            $("#modal-saving-content").on('hidden.bs.modal', function (e) {
+                $("#modal-saving-content").modal('dispose');
+            });
+        }
+
+        function previewVideo() {
+            $("#modal-generating-preview").modal(modalOptionsShow);
+            $("#modal-generating-preview").on('shown.bs.modal', function (e) {
+                indievideo
+                    .api
+                    .getData(function (videoData) {
+                        model.instance.editorData = videoData;
+
+                        $.ajax({
+                            url: previewUrl,
+                            type: "POST",
+                            contentType: "application/json",
+                            data: JSON.stringify(model),
+                            success: function (data) {
+                                $("#modal-generating-preview").on('hidden.bs.modal', function () {
+                                    $("#modal-preview-body").empty();
+                                    $("#modal-preview-body").append('<div class="iavideo-preview"></div>');
+
+                                    var previewVideoPlayer = iavideo({
+                                        sources: {
+                                            src: model.instance.videosource.src,
+                                            type: model.instance.videosource.type
+                                        },
+                                        questions: data.interactiveData,
+                                        selector: ".iavideo-preview"
+                                    });
+
+                                    $("#modal-preview").modal('show');
+
+                                    $("#modal-preview").on('hidden.bs.modal', function () {
+                                        previewVideoPlayer
+                                            .instance()
+                                            .dispose();
+                                    });
+
+                                    $("#modal-generating-preview").modal('dispose');
+                                });
+
+                                $("#modal-generating-preview").modal('hide');
+                            },
+                            error: function (err) {
+                                notifyError(translate('common.ooops'), translate('common.internal_error'));
+                                $("#modal-generating-preview").modal('hide');
+                            }
+                        });
+
+                    }, function () {
+                        notifyError(translate('common.attention'), translate('video.messages.not_valid_data'));
+                    });
+            });
+
+            $("#modal-generating-preview").on("hidden.bs.modal", function (e) {
+                $("#modal-generating-preview").modal('dispose');
+            });
+        }
+    </script>
+{% endblock %}

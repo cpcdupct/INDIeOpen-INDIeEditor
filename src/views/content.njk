@@ -1,0 +1,269 @@
+{% extends "layout/base.njk" %}
+
+{% block title %}
+    {{translate('title_editing')}}
+    {{name}}
+{% endblock %}
+
+{% block styles %}
+    <link rel="stylesheet" type="text/css" href="{{resource('/vendor/katex/katex.min.css')}}">
+    <link rel="stylesheet" type="text/css" href="{{resource('/vendor/indieauthor/editor-styles.min.css')}}">
+    <link rel="stylesheet" type="text/css" href="{{resource('/vendor/trumbowyg/ui/trumbowyg.min.css')}}">
+    <link rel="stylesheet" type="text/css" href="{{resource('/vendor/trumbowyg/trumbowyg.table.min.css')}}">
+
+{% endblock %}
+
+{% block nav %}
+    {% include "layout/nav.njk" %}
+{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-12 col-md-3 col-lg-2 bd-sidebar">
+            <nav class="palette-nav">
+                <div id="palette" data-type="palette" class="dragula-container row"></div>
+            </nav>
+        </div>
+        <div class="col-12 col-md-9 col-lg-10 offset-md-3 offset-lg-2  bd-content no-padding">
+            <div class="editor-container-header col-md-9 col-lg-10 ">
+                <div class="col left">
+                    {# Right buttons in header #}
+                    <button onclick="saveContent()" class="btn btn-sm btn-header btn-info r" data-toggle="tooltip" data-title="{{translate('save_content_help')}}">
+                        <i class="fa fa-save"></i>
+                        {{translate('save_content')}}
+                    </button>
+                    <button onclick="validateContent()" class="btn btn-sm btn-header btn-info r" data-toggle="tooltip" data-title="{{translate('check_content_help')}}">
+                        <i class="fa fa-check"></i>
+                        {{translate('check_content')}}
+                    </button>
+                    <button onclick="preview()" class="btn btn-sm btn-header btn-info r" data-toggle="tooltip" data-title="{{translate('preview_content_help')}}">
+                        <i class="fa fa-eye"></i>
+                        {{translate('preview')}}
+                    </button>
+
+                    {# Left buttons in header #}
+                    <button onclick="indieauthor.addSection(undefined, true)" class="btn btn-sm btn-header btn-success l" data-toggle="tooltip" data-title="{{translate('add_section_help')}}">
+                        <i class="fa fa-plus-circle"></i>
+                        {{translate('add_section')}}
+                    </button>
+                    <button onclick="indieauthor.api.clearContent()" class="btn btn-sm btn-header btn-danger l" data-toggle="tooltip" data-title="{{translate('clear_content_help')}}">
+                        <i class="fa fa-trash-alt"></i>
+                        {{translate('clear_content')}}
+                    </button>
+                    <button onclick="indieauthor.api.undo()" class="btn btn-sm btn-header btn-info l" data-toggle="tooltip" data-title="{{translate('undo_help')}}">
+                        <i class="fa fa-undo"></i>
+                        {{translate('undo')}}
+                    </button>
+                    <button onclick="indieauthor.api.redo()" class="btn btn-sm btn-header btn-info l" data-toggle="tooltip" data-title="{{translate('redo_help')}}">
+                        <i class="fa fa-redo"></i>
+                        {{translate('redo')}}
+                    </button>
+                </div>
+            </div>
+            <div class="editor-container">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item active">{{translate('now_editing')}}:
+                        <span>{{model.name}}</span></li>
+                </ol>
+                <div id="main-container" data-type="main-container" data-content="data-content">
+                    <p>
+                        <i class="fa fa-spin fa-spinner"></i>
+                        {{translate('loading')}}...
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% include "partials/modals/editor-settings.njk" %}
+    {% include "partials/modals/loading-content.njk" %}
+    {% include "partials/modals/saving-content.njk" %}
+    {% include "partials/modals/generating-preview.njk" %}
+    {% include "partials/modals/preview-generated.njk" %}
+
+{% endblock %}
+
+{% block scripts %}
+    {# DEPENDENCIES #}
+    <script type="text/javascript" src="{{resource('/vendor/katex/katex.min.js')}}"></script>
+    <script type="text/javascript" src="{{resource('/vendor/katex/auto-render.min.js')}}"></script>
+    <script type="text/javascript" src="{{resource('/vendor/dragula/dragula.min.js')}}"></script>
+    <script type="text/javascript" src="{{resource('/vendor/trumbowyg/trumbowyg.min.js')}}"></script>
+    <script type="text/javascript" src="{{resource('/vendor/trumbowyg/trumbowyg.whitespace.js')}}"></script>
+    <script type="text/javascript" src="{{resource('/vendor/trumbowyg/trumbowyg.cleanpaste.min.js')}}"></script>
+    <script type="text/javascript" src="{{resource('/vendor/trumbowyg/trumbowyg.allowtagsfrompaste.min.js')}}"></script>
+    <script type="text/javascript" src="{{resource('/vendor/trumbowyg/trumbowyg.template.js')}}"></script>
+    <script type="text/javascript" src="{{resource('/vendor/trumbowyg/trumbowyg.table.min.js')}}"></script>
+
+    {# EDITOR #}
+    <script type="text/javascript" src="{{resource('/vendor/indieauthor/editor.min.js')}}"></script>
+    <script type="text/javascript" src="/vendor/indieauthor/lang/{{getLocale()}}.js{{version()}}"></script>
+
+    {# CONTENT SCRIPT #}
+    <script type="text/javascript">
+        function loadCurrentmodel(data) {
+            $("#modal-loading-content").modal(modalOptionsShow);
+
+            $("#modal-loading-content").on("shown.bs.modal", function (e) {
+                indieauthor
+                    .api
+                    .editorFunctions
+                    .loadModelIntoPlugin(data, function () {
+                        $("#modal-loading-content").modal('hide');
+                        notifySuccess(translate("common.ok"), translate("content.messages.content_loaded"));
+                    }, function (err) {
+                        $("#modal-loading-content").modal('hide');
+                        console.error(err);
+                        notifyError(translate("common.ooops"), translate("content.messages.error_content_loaded"));
+                    });
+            });
+
+            $("#modal-loading-content").on("hidden.bs.modal", function (e) {
+                $("#modal-loading-content").modal('dispose');
+            });
+        }
+
+        function validateContent() {
+            indieauthor
+                .api
+                .validateContent(true);
+        }
+
+        function saveContent() {
+            $("#modal-saving-content").modal(modalOptionsShow);
+            $("#modal-saving-content").on('shown.bs.modal', function (e) {
+                indieauthor
+                    .api
+                    .editorFunctions
+                    .getEditorContent(function (sections) {
+                        model.instance.sections = sections;
+
+                        $.ajax({
+                            url: saveContentUrl,
+                            type: "POST",
+                            contentType: "application/json",
+                            data: JSON.stringify(model),
+                            success: function (data) {
+                                $("#modal-saving-content").modal('hide');
+                                notifySuccess(translate("common.ok"), translate("content.messages.content_saved"));
+                            },
+                            error: function (err) {
+                                console.err(err);
+                                $("#modal-saving-content").modal('hide');
+                                notifyError(translate("common.ooops"), translate('common.internal_error'));
+                            }
+                        });
+
+                    }, function (msg) {
+                        $("#modal-saving-content").modal('hide');
+                        notifyError(translate("common.ooops"), translate("content.messages.error_in_content"));
+                    })
+            });
+
+            $("#modal-saving-content").on("hidden.bs.modal", function (e) {
+                $("#modal-saving-content").modal('dispose');
+            });
+        }
+
+        function preview() {
+            $("#modal-saving-content").modal(modalOptionsShow);
+            $("#modal-saving-content").on('shown.bs.modal', function (e) {
+                indieauthor
+                    .api
+                    .editorFunctions
+                    .getEditorContent(function (sections) {
+                        model.instance.sections = sections;
+
+                        $.ajax({
+                            url: saveContentUrl,
+                            type: "POST",
+                            contentType: "application/json",
+                            data: JSON.stringify(model),
+                            success: function (data) {
+                                $("#modal-saving-content").modal('hide');
+                                notifySuccess(translate("common.ok"), translate("content.messages.content_saved"));
+                                indieauthor
+                                    .api
+                                    .editorFunctions
+                                    .getEditorContent(function (sections) {
+
+                                        $("#modal-generating-preview").modal(modalOptionsShow);
+                                        $("#modal-generating-preview").on('shown.bs.modal', function (e) {
+
+                                            $.ajax({
+                                                url: previewUnitUrl,
+                                                type: "POST",
+                                                contentType: "application/json",
+                                                data: JSON.stringify(model),
+                                                success: function (response) {
+                                                    $("#modal-generating-preview").modal('hide');
+                                                    window.open(response.url, "_blank");
+
+                                                    $("#modal-preview-generated-url").html(response.url);
+                                                    $("#modal-preview-generated-url").attr("href", response.url);
+                                                    $("#modal-preview-generated").modal(modalOptionsShowAllowClose);
+
+                                                    $("#modal-preview-generated").on('hidden.bs.modal', function (e) {
+                                                        $("#modal-preview-generated").modal('dispose');
+                                                    });
+                                                },
+                                                error: function (err) {
+                                                    $("#modal-generating-preview").modal('hide');
+                                                    notifyError(translate("common.error"), translate('common.internal_error'));
+                                                }
+                                            });
+                                        });
+
+                                        $("#modal-generating-preview").on("hidden.bs.modal", function (e) {
+                                            $("#modal-generating-preview").modal('dispose');
+                                        });
+
+                                    }, function (msg) {
+                                        indieauthor
+                                            .api
+                                            .validateContent(true);
+                                        indieauthor
+                                            .utils
+                                            .notifyWarning(translate("common.attention"), translate("content.messages.preview_error"));
+                                    });
+                            },
+                            error: function (err) {
+                                console.err(err);
+                                $("#modal-saving-content").modal('hide');
+                                notifyError(translate("common.ooops"), translate('common.internal_error'));
+                            }
+                        });
+
+                    }, function (msg) {
+                        $("#modal-saving-content").modal('hide');
+                        notifyError(translate("common.ooops"), translate("content.messages.error_in_content"));
+                    })
+            });
+
+            $("#modal-saving-content").on("hidden.bs.modal", function (e) {
+                $("#modal-saving-content").modal('dispose');
+            });
+        }
+    </script>
+
+    {# INITIALIZING #}
+    <script type="text/javascript">
+        var model = {{model | dump | safe}};
+
+        var editorData = model.instance;
+        var currentName = model.name;
+        var currentAuthor = model.author;
+        var currentLanguage = model.language;
+
+        var saveContentUrl = '/editor/content/{{token}}/save';
+        var previewUnitUrl = '/editor/content/{{token}}/preview';
+
+        (function () {
+            var domPalette = document.getElementById('palette');
+            var domContainer = document.getElementById('main-container');
+            indieauthor.init(domPalette, domContainer);
+
+            loadCurrentmodel(editorData);
+        })();
+    </script>
+{% endblock %}

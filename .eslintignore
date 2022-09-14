@@ -1,0 +1,4 @@
+# Ignore public folder
+/src/resources/js
+/modules
+/test

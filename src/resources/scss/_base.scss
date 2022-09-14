@@ -1,0 +1,61 @@
+@import 'variables';
+
+body {
+    font-size: 0.875rem;
+}
+
+/*
+ * Content
+ */
+[role='main'] {
+    padding-top: 133px;
+    /* Space for fixed navbar */
+}
+
+@media (min-width: 768px) {
+    [role='main'] {
+        padding-top: 8px;
+        /* Space for fixed navbar */
+    }
+}
+
+@media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {
+    [role='main'] {
+        top: 3em;
+        /* Space for fixed navbar */
+    }
+}
+
+.form-control-dark {
+    color: #fff;
+    background-color: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+.form-control-dark:focus {
+    border-color: transparent;
+    box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.25);
+}
+
+.card-padding {
+    padding: 1.6rem;
+}
+
+.tool-container {
+    background-color: #eef3f9;
+    border: 1px solid #b4bfcb;
+    padding: 10px;
+    margin-top: -15px;
+    margin-bottom: 10px;
+}
+
+.content {
+    padding-top: 48px !important;
+}
+
+.editor-container-header {
+    padding-top: 3px;
+    position: fixed;
+    z-index: 10;
+    box-shadow: 0 0.5rem 0.5rem rgba(0, 0, 0, 0.05), inset 0 -1px 0 rgba(0, 0, 0, 0.1);
+}

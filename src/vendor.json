@@ -1,0 +1,250 @@
+[{
+        "name": "bootstrap",
+        "moduleFolder": "./node_modules/bootstrap/dist",
+        "files": [
+            "/js/bootstrap.min.js",
+            "/js/bootstrap.min.js.map",
+            "/css/bootstrap.min.css",
+            "/css/bootstrap.min.css.map"
+        ],
+        "distfolder": "/bootstrap"
+    },
+    {
+        "name": "popper",
+        "moduleFolder": "./node_modules/popper.js/dist",
+        "files": [
+            "/umd/popper.min.js",
+            "/umd/popper.min.js.map"
+        ],
+        "distfolder": "/popper"
+    },
+    {
+        "name": "select2",
+        "moduleFolder": "./node_modules/select2/dist",
+        "files": [
+            "/js/select2.min.js",
+            "/css/select2.min.css",
+            "/js/i18n/es.js",
+            "/js/i18n/en.js",
+            "/js/i18n/fr.js",
+            "/js/i18n/lt.js",
+            "/js/i18n/el.js"
+        ],
+        "distfolder": "/select2"
+    },
+    {
+        "name": "select2-bootstrap4-theme",
+        "moduleFolder": "./node_modules/@ttskch/select2-bootstrap4-theme/dist",
+        "files": [
+            "/select2-bootstrap4.min.css"
+        ],
+        "distfolder": "/select2"
+    },
+    {
+        "name": "bootprompt",
+        "moduleFolder": "./node_modules/bootprompt",
+        "files": [
+            "/bootprompt.min.js",
+            "/bootprompt.min.js.map"
+        ],
+        "distfolder": "/bootprompt"
+    },
+    {
+        "name": "dragula",
+        "moduleFolder": "./node_modules/dragula/dist",
+        "files": [
+            "/dragula.min.js"
+        ],
+        "distfolder": "/dragula"
+    },
+    {
+        "name": "handlebars",
+        "moduleFolder": "./node_modules/handlebars/dist",
+        "files": [
+            "/handlebars.min.js"
+        ],
+        "distfolder": "/handlebars"
+    },
+    {
+        "name": "jquery",
+        "moduleFolder": "./node_modules/jquery/dist",
+        "files": [
+            "/jquery.min.js",
+            "/jquery.min.map"
+        ],
+        "distfolder": "/jquery"
+    },
+    {
+        "name": "jquery-ui",
+        "moduleFolder": "./modules/jquery-ui",
+        "files": [
+            "/jquery-ui.min.js",
+            "/jquery-ui.min.css"
+        ],
+        "distfolder": "/jquery"
+    },
+    {
+        "name": "jquery-validation",
+        "moduleFolder": "./node_modules/jquery-validation",
+        "files": [
+            "/dist/jquery.validate.min.js",
+            "/dist/localization/messages_es.min.js",
+            "/dist/localization/messages_fr.min.js",
+            "/dist/localization/messages_lt.min.js",
+            "/dist/localization/messages_el.min.js"
+        ],
+        "distfolder": "/jquery-validate"
+    },
+    {
+        "name": "jsonpath",
+        "moduleFolder": "./node_modules/jsonpath",
+        "files": [
+            "/jsonpath.min.js"
+        ],
+        "distfolder": "/jsonpath"
+    },
+    {
+        "name": "stickybits",
+        "moduleFolder": "./node_modules/stickybits/dist",
+        "files": [
+            "/stickybits.min.js"
+        ],
+        "distfolder": "/stickybits"
+    },
+    {
+        "name": "toastr",
+        "moduleFolder": "./node_modules/toastr/build",
+        "files": [
+            "/toastr.min.js",
+            "/toastr.min.css",
+            "/toastr.js.map"
+        ],
+        "distfolder": "/toastr"
+    },
+    {
+        "name": "trumbowyg",
+        "moduleFolder": "./modules/trumbowyg",
+        "files": [
+            "/trumbowyg.min.js",
+            "/trumbowyg.whitespace.js",
+            "/trumbowyg.template.js"
+        ],
+        "distfolder": "/trumbowyg"
+    },
+    {
+        "name": "trumbowyg-plugins",
+        "moduleFolder": "./node_modules/trumbowyg/dist",
+        "files": [
+            "/plugins/cleanpaste/trumbowyg.cleanpaste.min.js",
+            "/plugins/allowtagsfrompaste/trumbowyg.allowtagsfrompaste.min.js",
+            "/plugins/table/trumbowyg.table.min.js",
+            "/plugins/table/ui/trumbowyg.table.min.css"
+        ],
+        "distfolder": "/trumbowyg"
+    },
+    {
+        "name": "trumbowyg-ui",
+        "moduleFolder": "./node_modules/trumbowyg/dist",
+        "files": [
+            "/ui/trumbowyg.min.css",
+            "/ui/icons.svg"
+        ],
+        "distfolder": "/trumbowyg/ui"
+    },
+    {
+        "name": "katex",
+        "moduleFolder": "./node_modules/katex/dist",
+        "files": [
+            "/katex.min.js",
+            "/katex.min.css",
+            "/contrib/auto-render.min.js"
+        ],
+        "distfolder": "/katex"
+    },
+    {
+        "name": "katex-fonts",
+        "moduleFolder": "./node_modules/katex/dist/fonts",
+        "files": [
+            "/*.**"
+        ],
+        "distfolder": "/katex/fonts"
+    },
+    {
+        "name": "modernizr",
+        "moduleFolder": "./modules/modernizr",
+        "files": [
+            "/modernizr.js"
+        ],
+        "distfolder": "/modernizr"
+    },
+    {
+        "name": "INDIeAuthor",
+        "moduleFolder": "./modules/indieauthor",
+        "files": [
+            "/css/editor-styles.min.css",
+            "/js/editor.min.js"
+        ],
+        "distfolder": "/indieauthor"
+    },
+    {
+        "name": "INDIeAuthor-lang",
+        "moduleFolder": "./modules/indieauthor",
+        "files": [
+            "/js/lang/*.js"
+        ],
+        "distfolder": "/indieauthor/lang"
+    },
+    {
+        "name": "INDIeVideo",
+        "moduleFolder": "./modules/indievideo",
+        "files": [
+            "/indievideo-styles.min.css",
+            "/indievideo.min.js"
+        ],
+        "distfolder": "/indievideo"
+    },
+    {
+        "name": "INDIeVideo-lang",
+        "moduleFolder": "./modules/indievideo",
+        "files": [
+            "/lang/*.js"
+        ],
+        "distfolder": "/indievideo/lang"
+    },
+    {
+        "name": "iavideo",
+        "moduleFolder": "./modules/iavideo",
+        "files": [
+            "/iaVideo.min.css",
+            "/iaVideo.min.js"
+        ],
+        "distfolder": "/iavideo"
+    },
+    {
+        "name": "jstree",
+        "moduleFolder": "./node_modules/jstree/dist",
+        "files": [
+            "/jstree.min.js"
+        ],
+        "distfolder": "/jstree"
+    },
+    {
+        "name": "jstree",
+        "moduleFolder": "./node_modules/jstree/dist/themes/default",
+        "files": [
+            "/32px.png",
+            "/style.min.css",
+            "/throbber.gif"
+        ],
+        "distfolder": "/jstree/themes/default"
+    },
+    {
+        "name": "drawflow",
+        "moduleFolder": "./node_modules/drawflow/dist",
+        "files": [
+            "/drawflow.min.js",
+            "/drawflow.min.css"
+        ],
+        "distfolder": "/drawflow"
+    }
+]

@@ -1,0 +1,15 @@
+@import '../variables';
+
+.modal-indie {
+    background-color: $indieblue;
+    color: white;
+}
+
+.my-modal .modal-dialog .modal-content.modal-header {
+    background-color: $indieblue;
+    color: white;
+}
+
+.modal-break-url {
+    word-wrap: break-word;
+}

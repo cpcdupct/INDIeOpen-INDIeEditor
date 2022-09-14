@@ -1,0 +1,32 @@
+[
+    {
+        "language": "es",
+        "key": "true",
+        "value": "Verdadero"
+    },
+    {
+        "language": "es",
+        "key": "false",
+        "value": "Falso"
+    },
+    {
+        "language": "en",
+        "key": "true",
+        "value": "True"
+    },
+    {
+        "language": "en",
+        "key": "false",
+        "value": "False"
+    },
+    {
+        "language": "es",
+        "key": "alt",
+        "value": "Texto alternativo de la imagen no establecido"
+    },
+    {
+        "language": "en",
+        "key": "alt",
+        "value": "Alternative text for the image not set"
+    }
+]

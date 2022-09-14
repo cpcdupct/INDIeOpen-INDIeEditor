@@ -1,0 +1,117 @@
+@import '../variables';
+
+.question {
+    width: 100%;
+    height: 48px;
+    padding: 7px;
+    background-color: #c1cad4;
+    transition: opacity 0.4s ease-in-out;
+    border-radius: 4px;
+    -moz-border-radius: 4px;
+    -webkit-border-radius: 4px;
+    white-space: normal;
+    font-size: small;
+    text-align: center;
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.05), inset 0 -1px 0 rgba(0, 0, 0, 0.1);
+    border: solid 1px #a3b0bf;
+    display: flex;
+    margin-bottom: 8px;
+    margin-top: 8px;
+}
+
+.drag-item {
+    cursor: grab;
+}
+
+/* FIRST BLOCK */
+.question div:nth-child(1) {
+    text-align: center;
+    padding: 3px 10px 3px 3px;
+    border-right: 1px solid rgba(0, 0, 0, 0.2);
+    width: 36px;
+}
+
+/* SECOND BLOCK */
+.question div:nth-child(2) {
+    margin-top: 4px;
+    width: calc(100% - 125px);
+    margin-left: 12px;
+    text-align: left;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* THIRD BLOCK */
+.question div:nth-child(3) {
+    text-align: right;
+    width: 125px;
+}
+
+.question div:nth-child(3) > button {
+    margin-right: 3px;
+}
+
+.question-list {
+    min-height: 100px;
+    overflow-y: scroll;
+    max-height: 240px;
+}
+
+.gu-mirror {
+    position: fixed !important;
+    margin: 0 !important;
+    z-index: 9999 !important;
+    opacity: 0.8;
+    -ms-filter: 'progid:DXImageTransform.Microsoft.Alpha(Opacity=80)';
+    filter: alpha(opacity=80);
+}
+
+.gu-hide {
+    display: none !important;
+}
+
+.gu-unselectable {
+    -webkit-user-select: none !important;
+    -moz-user-select: none !important;
+    -ms-user-select: none !important;
+    user-select: none !important;
+}
+
+.gu-transit {
+    opacity: 0.2;
+    -ms-filter: 'progid:DXImageTransform.Microsoft.Alpha(Opacity=20)';
+    filter: alpha(opacity=20);
+}
+
+.badge {
+    margin-left: 4px;
+    margin-right: 4px;
+    cursor: pointer;
+}
+
+.correct {
+    color: #49ae0d;
+    font-weight: 400;
+}
+
+.category {
+    padding: 5px;
+}
+
+.category.selected {
+    background-color: #126982;
+}
+
+.group {
+    padding: 5px;
+}
+
+.group.selected {
+    background-color: #1d66b5;
+}
+
+.title-unit {
+    vertical-align: -webkit-baseline-middle;
+    vertical-align: middle;
+}

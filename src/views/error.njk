@@ -1,0 +1,12 @@
+{% extends "layout/base.njk" %}
+
+{% block title %}
+    {{translate('error')}}
+{% endblock %}
+
+{% block content %}
+    <main role="main" class="container">
+        <h2>{{ title }}</h2>
+        <p>{{ message }}</p>
+    </main>
+{% endblock %}

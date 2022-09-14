@@ -1,0 +1,18 @@
+@import '../variables';
+
+body {
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-align: center;
+    align-items: center;
+    background-color: #f5f5f5;
+}
+
+.image-container {
+    width: 100%;
+    padding-top: 25px;
+    margin: auto;
+    padding-left: 25%;
+    padding-right: 25%;
+    margin-bottom: 15px;
+}

@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="{{getLocale()}}">
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<meta name="description" content="INDIe Editor - An INDIeAuthor web implementation">
+	<link rel="icon" href="/favicon.ico">
+
+	<title>{% block title %}{% endblock %} | INDIe Editor </title>
+
+	{# CSS Dependencies  #}
+	<link rel="stylesheet" href="{{resource('/vendor/bootstrap/bootstrap.min.css')}}">
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css"
+		integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
+	<link href="https://fonts.googleapis.com/css?family=Istok+Web" rel="stylesheet">
+	<link rel="stylesheet" href="{{resource('/vendor/toastr/toastr.min.css')}}">
+	<link rel="stylesheet" href="{{resource('/vendor/jquery/jquery-ui.min.css')}}">
+
+	{# Custom styles  #}
+	<link href="{{resource('/assets/css/styles.min.css')}}" rel="stylesheet">
+
+	{% block styles %}
+
+	{% endblock %}
+</head>
+
+<body>
+	{% block nav %}
+
+	{% endblock %}
+	<div class="container-fluid content">
+		{% block content %}
+
+		{% endblock %}
+	</div>
+
+	{# JS DEPENDENCIES  #}
+	<script src="{{resource('/vendor/jquery/jquery.min.js')}}"></script>
+	<script src="{{resource('/vendor/jquery/jquery-ui.min.js')}}"></script>
+	<script src="{{resource('/vendor/jquery-validate/jquery.validate.min.js')}}"></script>
+	<script src="{{resource('/vendor/popper/popper.min.js')}}"></script>
+	<script src="{{resource('/vendor/bootstrap/bootstrap.min.js')}}"></script>
+	<script src="{{resource('/vendor/bootprompt/bootprompt.min.js')}}"></script>
+	<script src="{{resource('/vendor/toastr/toastr.min.js')}}"></script>
+	<script src="{{resource('/vendor/modernizr/modernizr.js')}}"></script>
+	<script src="{{resource('/vendor/handlebars/handlebars.min.js')}}"></script>
+	<script src="{{resource('/vendor/jsonpath/jsonpath.min.js')}}"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/feather-icons/4.9.0/feather.min.js"></script>
+	<script src="{{resource('/assets/js/utils.min.js')}}"></script>
+	<script src="{{resource('/assets/js/refresher.min.js')}}"></script>
+
+	{# JS TRANSLATIONS  #}
+	<script src="/assets/js/i18n/{{getLocale()}}.min.js{{version()}}"></script>
+
+	{% if getLocale() !== 'en' %}
+	<script src="/vendor/jquery-validate/messages_{{getLocale()}}.min.js"></script>
+	{% endif %}
+
+	<script type="text/javascript">
+		$(document).ready(function () {
+			feather.replace();
+			toastr.options.preventDuplicates = true;
+
+		});
+
+		var modalOptionsShow = {
+			show: true,
+			keyboard: false,
+			backdrop: 'static'
+		}
+
+		var modalOptionsShowAllowClose = {
+			show: true,
+			backdrop: true
+		}
+
+		function notifySuccess(title, message) {
+			toastr.success(message, title, {
+				timeOut: 5000,
+				positionClass: "toast-bottom-right"
+			});
+		}
+
+		function notifyInfo(title, message) {
+			toastr.info(message, title, {
+				timeOut: 5000,
+				positionClass: "toast-bottom-right"
+			});
+		}
+
+		function notifyWarning(title, message) {
+			toastr.warning(message, title, {
+				timeOut: 5000,
+				positionClass: "toast-bottom-right"
+			});
+		}
+
+		function notifyError(title, message) {
+			toastr.error(message, title, {
+				timeOut: 5000,
+				positionClass: "toast-bottom-right"
+			});
+		}
+
+		function translate(key)	{
+			return jsonpath.query(messages, key);
+		}
+
+		jQuery.validator.setDefaults({
+			errorElement: 'span',
+			errorPlacement: function (error, element) {
+				error.addClass('invalid-feedback');
+				element.closest('.form-group').append(error);
+			},
+			highlight: function (element, errorClass, validClass) {
+				$(element).addClass('is-invalid');
+			},
+			unhighlight: function (element, errorClass, validClass) {
+				$(element).removeClass('is-invalid');
+			}
+		});
+
+		const refresher = tokenRefresher();
+
+	</script>
+
+	{% block scripts %}
+
+	{% endblock %}
+</body>
+</html>
