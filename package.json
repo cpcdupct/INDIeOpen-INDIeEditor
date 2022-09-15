@@ -3,7 +3,8 @@
     "version": "1.10.0",
     "description": "INDIe Editor - An INDIeAuthor web implementation.",
     "main": "dist/server.js",
-    "license": "Apache-2.0",
+    "author": "Centro de Producción de Contenidos Digitales, Universidad Politécnica de Cartagena",
+    "license": "AGPL-3.0 license",
     "repository": {
         "type": "GIT",
         "url": "MY_GIT_URL"
